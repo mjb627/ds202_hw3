@@ -1,0 +1,60 @@
+---
+title: "Michael Bardfield; mjb627"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#hw3
+```{r}
+#1.) 244 parties were served and in total 627 people were served.
+data(tips, package="reshape2")
+head(tips)
+dim(tips)
+print(sum(tips$size)) 
+numParty <- 244
+numParty
+
+#2.) We have numeric, factor and integer variables in the data frame.
+class(tips$total_bill)
+class(tips$tip)
+class(tips$sex)
+class(tips$smoker)
+class(tips$day)
+class(tips$time)
+class(tips$size)
+
+#3.) 
+table(tips$day)
+dayData <- tips$day
+dayData2 <- factor(dayData, c('Thur','Fri','Sat','Sun'))
+dayTable <- table(dayData2)
+dayTable
+
+#4.)
+female5 <- tips[tips$sex == 'Female' & tips$size >= 5.00, ]
+female5
+
+#5.) The relationship between tip and total bill is linear. For the most part, the higher the total bill the higher the tip will be. One anomaly is the one bill over $50 since its the only bill greater than 50 and the tip is the only tip in the double digits. This anomaly shows what greater bills tip's would look like. Another anomaly is the bill close to $7 with a tip over $5. This is an anomaly since they tipped almost the whole bill which is not normal to do.
+library(ggplot2)
+ggplot(data=tips, aes(x=tip, y=total_bill)) + geom_point()
+
+#6.) Average tiprate is about 16%
+tips$tiprate <- tips$tip / tips$total_bill
+avgtiprate <- mean(tips$tip / tips$total_bill)
+avgtiprate
+
+#7.)
+tips2 <- tips
+tips2$time <- factor(tips2$time, c('Lunch','Dinner'))
+ggplot(tips2, aes(x=time, y=tiprate)) + geom_boxplot() 
+
+#8.) The amount of points on each graph is similar with non smokers having a little more than smokers. Looking at the non smokers we have lots of males paying larger bills and bigger. This can be due to non smokers having greater size parties which will amount to a greater total bill. It could also relate to maybe non smokers are more wealthy so they can spend more on food. The smoker graph has lots of tips below $5 which is not quite as true in the non smoker graph. Smokers are tending to tip less possibly because they need money to pay for ciggarettes so they spend less on tipping.
+ggplot(tips, aes(x=tip, y=total_bill, color=sex)) + geom_point() + facet_wrap(~smoker)
+
+#9.) On the weekdays(Thur and Fri) whose paying is about 50/50. This could be due to the fact it is a workday so employees are going out to eat on their breaks. Likely the people going out to eat on the weekdays are of the same sex. On the weekends(Sat and Sun) we have more males paying. This could be due to people going out on dates during the weekend. It is common for the man to pay the bill on a date hence the greater amount of males paying on the weekend.
+tips3 <- tips
+tips3$day <- factor(tips3$day, c('Thur','Fri','Sat','Sun'))
+ggplot(tips3, aes(x=day, fill=sex)) + geom_bar()
+```
